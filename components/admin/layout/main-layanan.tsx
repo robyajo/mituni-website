@@ -42,7 +42,7 @@ export function MainLayanan() {
                 asChild
                 className={
                   pathname === "/services/items"
-                    ? "active bg-primary-foreground rounded-md text-foreground"
+                    ? "active bg-sidebar-accent rounded-md"
                     : ""
                 }
               >
@@ -64,7 +64,7 @@ export function MainLayanan() {
                 asChild
                 className={
                   pathname === "/services/dry"
-                    ? "active bg-sidebar-primary-foreground rounded-md text-foreground"
+                    ? "active bg-sidebar-accent rounded-md"
                     : ""
                 }
               >
@@ -86,7 +86,7 @@ export function MainLayanan() {
                 asChild
                 className={
                   pathname === "/services/rak"
-                    ? "active bg-sidebar-primary-foreground rounded-md text-foreground"
+                    ? "active bg-sidebar-accent rounded-md"
                     : ""
                 }
               >
