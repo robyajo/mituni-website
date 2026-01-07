@@ -22,6 +22,11 @@ const nextConfig: NextConfig = {
         hostname: "mituni-api.lapeh.web.id",
         pathname: "/**",
       },
+      {
+        protocol: "https",
+        hostname: "images.unsplash.com",
+        pathname: "/**",
+      },
 
       // Tambahkan domain lain jika ada gambar dari sana
     ],
