@@ -70,7 +70,7 @@ export const metadata = createMetadata({
   icons: {
     icon: "/favicon.ico",
     shortcut: "/favicon.ico",
-    apple: "/apple-touch-icon.png",
+    // apple: "/apple-touch-icon.png",
   },
   category: "government",
   classification: "government services",

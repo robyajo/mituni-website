@@ -38,6 +38,22 @@ export function MainLayanan() {
         <SidebarMenuItem>
           <Tooltip>
             <TooltipTrigger asChild>
+              <SidebarMenuButton asChild isActive={pathname === "/orders"}>
+                <Link href="/orders">
+                  <Layers />
+                  <span className="group-data-[collapsible=icon]:hidden">
+                    Orders
+                  </span>
+                </Link>
+              </SidebarMenuButton>
+            </TooltipTrigger>
+            <TooltipContent side="right">Orders</TooltipContent>
+          </Tooltip>
+        </SidebarMenuItem>
+
+        <SidebarMenuItem>
+          <Tooltip>
+            <TooltipTrigger asChild>
               <SidebarMenuButton
                 asChild
                 className={
@@ -57,6 +73,7 @@ export function MainLayanan() {
             <TooltipContent side="right">Layanan</TooltipContent>
           </Tooltip>
         </SidebarMenuItem>
+
         <SidebarMenuItem>
           <Tooltip>
             <TooltipTrigger asChild>

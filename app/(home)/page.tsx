@@ -22,11 +22,12 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
+import AnimatedHeader from "@/components/landing/AnimatedHeader";
 
 export default function Home() {
   return (
     <div className="flex min-h-screen flex-col bg-background font-sans text-foreground">
-      <Header />
+      <AnimatedHeader />
       <main className="flex-1">
         {/* Hero Section */}
         <section className="relative overflow-hidden pt-16 md:pt-24 lg:pt-32 pb-16 md:pb-24">

@@ -26,16 +26,10 @@ export function MainMenu() {
     <SidebarGroup className="py-0">
       <SidebarGroupLabel className="group-data-[collapsible=icon]:hidden"></SidebarGroupLabel>
       <SidebarMenu>
-        <SidebarMenuItem
-          className={
-            pathname === "/dashboard"
-              ? "active bg-sidebar-primary text-sidebar-primary-foreground rounded-md"
-              : ""
-          }
-        >
+        <SidebarMenuItem>
           <Tooltip>
             <TooltipTrigger asChild>
-              <SidebarMenuButton asChild>
+              <SidebarMenuButton asChild isActive={pathname === "/dashboard"}>
                 <Link href="/dashboard">
                   <Home />
                   <span className="group-data-[collapsible=icon]:hidden">
