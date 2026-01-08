@@ -29,7 +29,7 @@ export function MainMenu() {
         <SidebarMenuItem
           className={
             pathname === "/dashboard"
-              ? "active bg-sidebar-accent rounded-md"
+              ? "active bg-sidebar-primary text-sidebar-primary-foreground rounded-md"
               : ""
           }
         >
