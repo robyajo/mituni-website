@@ -1,3 +1,6 @@
+import AnimatedHeader from "@/components/landing/AnimatedHeader";
+import { Footer } from "@/components/landing/Footer";
+
 export default function HomeLayout({
   children,
 }: {
@@ -5,11 +8,9 @@ export default function HomeLayout({
 }) {
   return (
     <>
-      <div className="min-h-screen bg-background">
-        {/* <HomeHeader /> */}
-        {children}
-        {/* <HomeFooter /> */}
-      </div>
+      <AnimatedHeader />
+      {children}
+      <Footer />
     </>
   );
 }
