@@ -2,7 +2,6 @@
 
 import {
   Archive,
-  ChevronRight,
   Layers,
   Shirt,
   SoapDispenserDroplet,

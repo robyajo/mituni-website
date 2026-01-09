@@ -7,7 +7,6 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import {
   Settings,
   Undo2,
-  TrashIcon,
   EyeOff,
   CheckSquare,
   MoveHorizontal,
@@ -90,11 +89,15 @@ interface DataTableToolbarProps<TData extends ExportableData> {
   transformFunction?: DataTransformFunction<TData>;
   customToolbarComponent?: React.ReactNode;
   // Subrow props
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   subRowsConfig?: any;
   getSelectedParentsAndSubrows?: () => {
     parents: TData[];
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     subrows: any[];
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     parentIds: any[];
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     subrowIds: any[];
   };
   getSelectedParentRows?: () => Promise<TData[]>;
@@ -258,6 +261,7 @@ export function DataTableToolbar<TData extends ExportableData>({
   const [dates, setDates] = useState<{
     from: Date | undefined;
     to: Date | undefined;
+    // eslint-disable-next-line react-hooks/refs
   }>(getInitialDates());
 
   // Track if user has explicitly changed dates

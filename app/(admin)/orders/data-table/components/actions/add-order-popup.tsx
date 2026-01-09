@@ -2,10 +2,8 @@
 
 // ** import core packages
 import * as React from "react";
-import { useRouter } from "next/navigation";
 import { PlusCircle } from "lucide-react";
 import { toast } from "sonner";
-import { useQueryClient } from "@tanstack/react-query";
 
 // ** import components
 import { Button } from "@/components/ui/button";
@@ -20,10 +18,8 @@ import {
 } from "@/components/ui/dialog";
 
 export function AddOrderPopup() {
-  const router = useRouter();
   const [open, setOpen] = React.useState(false);
   const [isLoading, setIsLoading] = React.useState(false);
-  const queryClient = useQueryClient();
 
   const handleAdd = async () => {
     try {
@@ -42,7 +38,7 @@ export function AddOrderPopup() {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button size="md">
+        <Button size="sm">
           <PlusCircle className="mr-2 size-4" aria-hidden="true" />
           Add Order
         </Button>

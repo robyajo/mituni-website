@@ -122,8 +122,6 @@ export const authOptions: AuthOptions = {
             const response = res.data;
 
             if (response.success === true && response.data?.user) {
-              const outletId = response.data.outlet_id_active;
-
               return {
                 ...response.data.user,
                 outlet_id_active: response.data.outlet_id_active,
@@ -139,6 +137,7 @@ export const authOptions: AuthOptions = {
           } else {
             throw new Error("Received invalid response from server");
           }
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (error: any) {
           if (error.response?.data) {
             // Handle Axios error response
@@ -156,7 +155,6 @@ export const authOptions: AuthOptions = {
   callbacks: {
     async jwt({
       token,
-      account,
       user,
       trigger,
       session,
@@ -165,13 +163,14 @@ export const authOptions: AuthOptions = {
       account: Account | null;
       user?: User | AdapterUser;
       trigger?: "update" | string;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       session?: any;
     }) {
       // Initial sign in
       if (user) {
         const typedUser = user as User;
         token.accessToken = typedUser.accessToken;
-        token.outlet_id_active = (typedUser as any).outlet_id_active;
+        token.outlet_id_active = typedUser.outlet_id_active;
         token.tokenType = typedUser.tokenType;
         // Store all user data in the token
         token.user = {
@@ -198,12 +197,13 @@ export const authOptions: AuthOptions = {
     async session({
       session,
       token,
-      trigger,
-      newSession,
     }: {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       session: any;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       token: any;
       trigger?: "update" | string;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       newSession?: any;
     }) {
       // Send properties to the client, like an access_token from a provider.
@@ -224,15 +224,13 @@ export const authOptions: AuthOptions = {
     },
     async signIn({
       user,
-      account,
-      profile,
-      email,
-      credentials,
     }: {
       user: User | AdapterUser;
       account: Account | null;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       profile?: any;
       email?: { verificationRequest?: boolean };
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       credentials?: Record<string, any>;
     }) {
       if (user) return true;

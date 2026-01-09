@@ -33,6 +33,7 @@ const COLUMN_ORDER_STORAGE_KEY = "data-table-column-order";
 export function DataTableViewOptions<TData>({
   table,
   columnMapping,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   size = "default",
 }: DataTableViewOptionsProps<TData>) {
   // Get columns that can be hidden

@@ -30,7 +30,7 @@ interface DeleteOrderPopupProps {
 export function DeleteOrderPopup({
   open,
   onOpenChange,
-  orderId,
+  // orderId: _orderId,
   orderReference,
   isSubrow = false,
   resetSelection,

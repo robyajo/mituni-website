@@ -36,6 +36,7 @@ export function createConditionalStateHook(enableUrlState: boolean) {
       }
       
       return [regularState, setRegularStateWrapper] as const;
+      // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [enableUrlState, regularState, urlState, setUrlState, setRegularStateWrapper]);
   };
 } 

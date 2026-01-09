@@ -43,15 +43,23 @@ const Tabs = ({
   }, [tabs.length]);
 
   const navRef = React.useRef<HTMLDivElement>(null);
-  const navRect = navRef.current?.getBoundingClientRect();
-
-  const selectedRect = buttonRefs[selectedTabIndex]?.getBoundingClientRect();
+  const [navRect, setNavRect] = React.useState<DOMRect | undefined>(undefined);
+  const [selectedRect, setSelectedRect] = React.useState<DOMRect | undefined>(
+    undefined
+  );
+  const [hoveredRect, setHoveredRect] = React.useState<DOMRect | undefined>(
+    undefined
+  );
 
   const [hoveredTabIndex, setHoveredTabIndex] = React.useState<number | null>(
     null
   );
-  const hoveredRect =
-    buttonRefs[hoveredTabIndex ?? -1]?.getBoundingClientRect();
+
+  React.useEffect(() => {
+    setNavRect(navRef.current?.getBoundingClientRect());
+    setSelectedRect(buttonRefs[selectedTabIndex]?.getBoundingClientRect());
+    setHoveredRect(buttonRefs[hoveredTabIndex ?? -1]?.getBoundingClientRect());
+  }, [selectedTabIndex, hoveredTabIndex, buttonRefs]);
 
   return (
     <nav

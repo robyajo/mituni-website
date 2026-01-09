@@ -8,7 +8,6 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-  useSidebar,
 } from "@/components/ui/sidebar";
 import Link from "next/link";
 import {
@@ -19,7 +18,6 @@ import {
 import { usePathname } from "next/navigation";
 
 export function MainMenu() {
-  const { isMobile } = useSidebar();
   const pathname = usePathname();
 
   return (

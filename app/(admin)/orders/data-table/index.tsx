@@ -59,7 +59,9 @@ async function fetchLocalOrdersData(params: {
   // Sort
   if (sort_by) {
     filtered.sort((a, b) => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const aVal = (a as any)[sort_by];
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const bVal = (b as any)[sort_by];
       if (aVal < bVal) return sort_order === "asc" ? -1 : 1;
       if (aVal > bVal) return sort_order === "asc" ? 1 : -1;
@@ -85,12 +87,14 @@ async function fetchLocalOrdersData(params: {
 }
 
 // Add isQueryHook = false to satisfy TypeScript union type in DataTable
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 (fetchLocalOrdersData as any).isQueryHook = false;
 
 export function OrdersDataTable() {
   return (
     <DataTable<Order, unknown>
       getColumns={getColumns}
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       fetchDataFn={fetchLocalOrdersData as any}
       // fetchByIdsFn={fetchOrdersByIds}
       idField="id"

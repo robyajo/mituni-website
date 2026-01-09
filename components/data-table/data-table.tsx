@@ -57,11 +57,8 @@ import { useTableConfig } from "./utils/table-config";
 import { useTableColumnResize } from "./hooks/use-table-column-resize";
 import { preprocessSearch } from "./utils/search";
 import {
-  createSortingHandler,
   createColumnFiltersHandler,
   createColumnVisibilityHandler,
-  createPaginationHandler,
-  createColumnSizingHandler,
   createSortingState,
 } from "./utils/table-state-handlers";
 import { createKeyboardNavigationHandler } from "./utils/keyboard-navigation";
@@ -95,10 +92,10 @@ interface DataFetchResult<TData> {
 }
 
 // Types for table handlers
-type PaginationUpdater<TData> = (prev: {
+type PaginationUpdater = (prev: { pageIndex: number; pageSize: number }) => {
   pageIndex: number;
   pageSize: number;
-}) => { pageIndex: number; pageSize: number };
+};
 type SortingUpdater = (
   prev: { id: string; desc: boolean }[]
 ) => { id: string; desc: boolean }[];
@@ -119,6 +116,7 @@ export interface SubRowsConfig<TData> {
   subRowsField?: string;
 
   // For custom-columns mode: different columns for subrows
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   subRowColumns?: ColumnDef<any, unknown>[];
   showSubRowHeaders?: boolean;
 
@@ -155,11 +153,12 @@ interface DataTableProps<TData extends ExportableData, TValue> {
   // Subrow column definitions generator (for custom-columns mode)
   getSubRowColumns?: (
     handleRowDeselection: ((rowId: string) => void) | null | undefined
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   ) => ColumnDef<any, unknown>[];
 
   // Data fetching function
-  fetchDataFn:
-    | ((params: any) => Promise<DataFetchResult<TData>>)
+  fetchDataFn: // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  | ((params: any) => Promise<DataFetchResult<TData>>)
     | ((
         page: number,
         pageSize: number,
@@ -324,6 +323,7 @@ export function DataTable<TData extends ExportableData, TValue>({
 
   // Function to sort subrows for a specific parent
   const getSortedSubrows = useCallback(
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (parentId: string, subrows: any[]) => {
       const sortConfig = subrowSorting[parentId];
 
@@ -371,6 +371,7 @@ export function DataTable<TData extends ExportableData, TValue>({
     // Apply sorting to subrows for each parent
     return items.map((item) => {
       const itemId = String(item[idField]);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const subRows = (item as any)[subRowsConfig.subRowsField || "subRows"];
 
       // If no subrows or no sorting for this parent, return as-is
@@ -464,10 +465,12 @@ export function DataTable<TData extends ExportableData, TValue>({
             const itemId = String(item[idField]);
             parentIdsMap.set(itemId, true);
 
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             const subRowsData = (item as any)[
               subRowsConfig.subRowsField || "subRows"
             ];
             if (Array.isArray(subRowsData)) {
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
               subRowsData.forEach((subRow: any) => {
                 const subRowId = String(subRow[idField]);
                 subrowIdsMap.set(subRowId, true);
@@ -615,10 +618,12 @@ export function DataTable<TData extends ExportableData, TValue>({
       }
 
       // Check subrows
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const subRowsData = (item as any)[
         subRowsConfig.subRowsField || "subRows"
       ];
       if (Array.isArray(subRowsData)) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         subRowsData.forEach((subRow: any) => {
           const subRowId = String(subRow[idField]);
           if (selectedItemIds[subRowId]) {
@@ -693,6 +698,7 @@ export function DataTable<TData extends ExportableData, TValue>({
       );
 
       // Filter fetched items to only include parents (not subrows)
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const fetchedParents = fetchedItems.filter((item: any) => {
         // A parent row either has no item_id, or has parent-level fields
         // We can identify parents by checking if they have subRows or parent-level fields
@@ -731,10 +737,12 @@ export function DataTable<TData extends ExportableData, TValue>({
     // Find subrow items from current page
     const subrowsInCurrentPage: TData[] = [];
     dataItems.forEach((item) => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const subRowsData = (item as any)[
         subRowsConfig.subRowsField || "subRows"
       ];
       if (Array.isArray(subRowsData)) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         subRowsData.forEach((subRow: any) => {
           if (selectedSubrowIds.has(String(subRow[idField]))) {
             subrowsInCurrentPage.push(subRow as TData);
@@ -790,11 +798,14 @@ export function DataTable<TData extends ExportableData, TValue>({
 
       // Extract only the selected subrows from fetched parent orders
       const fetchedSubrows: TData[] = [];
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       fetchedParentOrders.forEach((item: any) => {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const subRowsData = (item as any)[
           subRowsConfig.subRowsField || "subRows"
         ];
         if (Array.isArray(subRowsData)) {
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           subRowsData.forEach((subRow: any) => {
             if (selectedSubrowIds.has(String(subRow[idField]))) {
               fetchedSubrows.push(subRow as TData);
@@ -977,19 +988,23 @@ export function DataTable<TData extends ExportableData, TValue>({
   );
 
   const handleColumnFiltersChange = useCallback(
-    createColumnFiltersHandler(setColumnFilters),
-    []
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (updaterOrValue: any) =>
+      createColumnFiltersHandler(setColumnFilters)(updaterOrValue),
+    [setColumnFilters]
   );
 
   const handleColumnVisibilityChange = useCallback(
-    createColumnVisibilityHandler(setColumnVisibility),
-    []
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (updaterOrValue: any) =>
+      createColumnVisibilityHandler(setColumnVisibility)(updaterOrValue),
+    [setColumnVisibility]
   );
 
   const handlePaginationChange = useCallback(
     (
       updaterOrValue:
-        | PaginationUpdater<TData>
+        | PaginationUpdater
         | { pageIndex: number; pageSize: number }
     ) => {
       // Extract the new pagination state
@@ -1113,6 +1128,7 @@ export function DataTable<TData extends ExportableData, TValue>({
       // SUBROW ID FIX: Generate unique composite IDs to avoid collisions
       // Without this, parent ID=1 and subrow ID=1 would both be "1"
       getRowId: (row: TData, index: number, parent?: Row<TData>) => {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const rowId = String((row as any)[idField]);
         if (subRowsConfig?.enabled && parent) {
           // Subrow: create composite ID like "438-sub-3706"
@@ -1133,6 +1149,7 @@ export function DataTable<TData extends ExportableData, TValue>({
         onExpandedChange: setExpanded,
         getExpandedRowModel: getExpandedRowModel(),
         getSubRows: (row: TData) => {
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           const subRows = (row as any)[subRowsConfig.subRowsField || "subRows"];
           // Only return if it's a valid array with items
           return Array.isArray(subRows) && subRows.length > 0
@@ -1197,16 +1214,18 @@ export function DataTable<TData extends ExportableData, TValue>({
 
   // Create keyboard navigation handler
   const handleKeyDown = useCallback(
-    createKeyboardNavigationHandler(
-      table,
-      onRowClick
-        ? (rowData: TData, rowIndex: number) => {
-            // Handle keyboard activation (Enter/Space) for row clicks
-            onRowClick(rowData, rowIndex);
-          }
-        : undefined
-    ),
-    [onRowClick]
+    (e: React.KeyboardEvent<HTMLDivElement>) => {
+      createKeyboardNavigationHandler(
+        table,
+        onRowClick
+          ? (rowData: TData, rowIndex: number) => {
+              // Handle keyboard activation (Enter/Space) for row clicks
+              onRowClick(rowData, rowIndex);
+            }
+          : undefined
+      )(e);
+    },
+    [table, onRowClick]
   );
 
   // Add an effect to validate page number when page size changes
@@ -1432,12 +1451,12 @@ export function DataTable<TData extends ExportableData, TValue>({
           <TableBody>
             {isLoading ? (
               // Loading state
-              Array.from({ length: pageSize }).map((_, i) => (
+              Array.from({ length: pageSize }).map(() => (
                 <TableRow
                   key={`loading-row-${crypto.randomUUID()}`}
                   tabIndex={-1}
                 >
-                  {Array.from({ length: columns.length }).map((_, j, array) => (
+                  {Array.from({ length: columns.length }).map(() => (
                     <TableCell
                       key={`skeleton-cell-${crypto.randomUUID()}`}
                       className="px-4 py-2 truncate max-w-0 text-left"
@@ -1522,11 +1541,14 @@ export function DataTable<TData extends ExportableData, TValue>({
                               headerText = ""; // Empty for select column
                             } else if (column.id === "actions") {
                               headerText = "Actions";
+                              // eslint-disable-next-line @typescript-eslint/no-explicit-any
                             } else if ((column as any).meta?.title) {
+                              // eslint-disable-next-line @typescript-eslint/no-explicit-any
                               headerText = (column as any).meta.title;
                             }
 
                             // Check if this column is sortable (has accessorKey)
+                            // eslint-disable-next-line @typescript-eslint/no-explicit-any
                             const accessorKey = (column as any).accessorKey;
                             const isSortable =
                               !!accessorKey &&
@@ -1599,9 +1621,11 @@ export function DataTable<TData extends ExportableData, TValue>({
                         >
                           {subRowColumns.map((column, colIndex) => {
                             // Get the value from the subrow data
+                            // eslint-disable-next-line @typescript-eslint/no-explicit-any
                             const accessorKey = (column as any).accessorKey;
                             const value = accessorKey
-                              ? (row.original as any)[accessorKey]
+                              ? // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                                (row.original as any)[accessorKey]
                               : null;
 
                             return (
@@ -1619,8 +1643,10 @@ export function DataTable<TData extends ExportableData, TValue>({
                                       getValue: () => value,
                                       row,
                                       column,
+                                      // eslint-disable-next-line @typescript-eslint/no-explicit-any
                                       cell: { getValue: () => value } as any,
                                       table,
+                                      // eslint-disable-next-line @typescript-eslint/no-explicit-any
                                     } as any)
                                   : value}
                               </TableCell>
@@ -1642,9 +1668,11 @@ export function DataTable<TData extends ExportableData, TValue>({
                     >
                       {subRowColumns.map((column, colIndex) => {
                         // Get the value from the subrow data
+                        // eslint-disable-next-line @typescript-eslint/no-explicit-any
                         const accessorKey = (column as any).accessorKey;
                         const value = accessorKey
-                          ? (row.original as any)[accessorKey]
+                          ? // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                            (row.original as any)[accessorKey]
                           : null;
 
                         return (
@@ -1661,8 +1689,10 @@ export function DataTable<TData extends ExportableData, TValue>({
                                   getValue: () => value,
                                   row,
                                   column,
+                                  // eslint-disable-next-line @typescript-eslint/no-explicit-any
                                   cell: { getValue: () => value } as any,
                                   table,
+                                  // eslint-disable-next-line @typescript-eslint/no-explicit-any
                                 } as any)
                               : value}
                           </TableCell>

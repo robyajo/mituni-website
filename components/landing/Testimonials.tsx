@@ -77,7 +77,7 @@ export function Testimonials() {
                   ))}
                 </div>
                 <p className="text-sm text-muted-foreground italic">
-                  "{testimonial.content}"
+                  &quot;{testimonial.content}&quot;
                 </p>
               </CardContent>
             </Card>

@@ -34,11 +34,11 @@ interface BulkDeletePopupProps {
 export function BulkDeletePopup({
   open,
   onOpenChange,
-  selectedOrders,
+  // selectedOrders: _selectedOrders,
   parentOrders,
   independentChildItems,
-  allSelectedIds,
-  totalSelectedCount,
+  // allSelectedIds: _allSelectedIds,
+  // totalSelectedCount: _totalSelectedCount,
   deleteMode,
   resetSelection,
 }: BulkDeletePopupProps) {

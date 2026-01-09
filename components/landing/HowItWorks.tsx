@@ -1,5 +1,4 @@
 import {
-  ArrowRight,
   ClipboardList,
   MonitorSmartphone,
   Rocket,

@@ -1,28 +1,30 @@
 import { toast } from "sonner";
 import ExcelJS from "exceljs";
 
-
 // Generic type for exportable data - should have string keys and values that can be converted to string
 // Allow arrays for hierarchical data (subRows)
-export type ExportableData = Record<string, string | number | boolean | null | undefined | any[]>;
+export type ExportableData = Record<
+  string,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  string | number | boolean | null | undefined | any[]
+>;
 
 /**
  * Flatten hierarchical data for export
  */
 export function flattenHierarchicalData<T extends ExportableData>(
   data: T[],
-  subRowsField: string = 'subRows',
+  subRowsField: string = "subRows",
   includeDepth: boolean = false
 ): T[] {
   const flattened: T[] = [];
 
   const flatten = (items: T[], depth: number = 0) => {
     items.forEach((item) => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const { [subRowsField]: subRows, ...itemData } = item as any;
       flattened.push(
-        includeDepth
-          ? ({ ...itemData, _depth: depth } as T)
-          : (itemData as T)
+        includeDepth ? ({ ...itemData, _depth: depth } as T) : (itemData as T)
       );
 
       if (subRows && Array.isArray(subRows) && subRows.length > 0) {
@@ -40,23 +42,26 @@ export function flattenHierarchicalData<T extends ExportableData>(
  */
 export function exportParentRowsOnly<T extends ExportableData>(
   data: T[],
-  subRowsField: string = 'subRows'
+  subRowsField: string = "subRows"
 ): T[] {
   return data.map((item) => {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any
     const { [subRowsField]: _, ...parentData } = item as any;
     return parentData as T;
   });
 }
 
 // Type for transformation function that developers can provide
-export type DataTransformFunction<T extends ExportableData> = (row: T) => ExportableData;
+export type DataTransformFunction<T extends ExportableData> = (
+  row: T
+) => ExportableData;
 
 /**
  * Convert array of objects to CSV string
  */
 function convertToCSV<T extends ExportableData>(
-  data: T[], 
-  headers: string[], 
+  data: T[],
+  headers: string[],
   columnMapping?: Record<string, string>,
   transformFunction?: DataTransformFunction<T>
 ): string {
@@ -69,7 +74,7 @@ function convertToCSV<T extends ExportableData>(
 
   if (columnMapping) {
     // Use column mapping for header names
-    const headerRow = headers.map(header => {
+    const headerRow = headers.map((header) => {
       const mappedHeader = columnMapping[header] || header;
       // Escape quotes and wrap in quotes if contains comma
       return mappedHeader.includes(",") || mappedHeader.includes('"')
@@ -86,17 +91,19 @@ function convertToCSV<T extends ExportableData>(
   for (const item of data) {
     // Apply transformation function if provided
     const transformedItem = transformFunction ? transformFunction(item) : item;
-    
-    const row = headers.map(header => {
+
+    const row = headers.map((header) => {
       // Get the value for this header from the transformed item
       const value = transformedItem[header];
 
       // Convert all values to string and properly escape for CSV
-      const cellValue = value === null || value === undefined ? "" : String(value);
+      const cellValue =
+        value === null || value === undefined ? "" : String(value);
       // Escape quotes and wrap in quotes if contains comma
-      const escapedValue = cellValue.includes(",") || cellValue.includes('"')
-        ? `"${cellValue.replace(/"/g, '""')}"`
-        : cellValue;
+      const escapedValue =
+        cellValue.includes(",") || cellValue.includes('"')
+          ? `"${cellValue.replace(/"/g, '""')}"`
+          : cellValue;
 
       return escapedValue;
     });
@@ -140,10 +147,12 @@ export function exportToCSV<T extends ExportableData>(
 
   try {
     // Apply transformation function first if provided, then filter data to only include specified headers
-    const processedData = data.map(item => {
+    const processedData = data.map((item) => {
       // Apply transformation function if provided
-      const transformedItem = transformFunction ? transformFunction(item) : item;
-      
+      const transformedItem = transformFunction
+        ? transformFunction(item)
+        : item;
+
       // Filter to only include specified headers
       const filteredItem: ExportableData = {};
       for (const header of headers) {
@@ -182,9 +191,11 @@ export async function exportToExcel<T extends ExportableData>(
 
   try {
     // If no column mapping is provided, create one from the data keys
-    const mapping = columnMapping ||
+    const mapping =
+      columnMapping ||
       Object.keys(data[0] || {}).reduce((acc, key) => {
-        acc[key] = key.charAt(0).toUpperCase() + key.slice(1).replace(/_/g, ' ');
+        acc[key] =
+          key.charAt(0).toUpperCase() + key.slice(1).replace(/_/g, " ");
         return acc;
       }, {} as Record<string, string>);
 
@@ -203,9 +214,12 @@ export async function exportToExcel<T extends ExportableData>(
     }));
 
     // Apply transformation function first if provided, then add data rows
-    data.forEach(item => {
-      const transformedItem = transformFunction ? transformFunction(item) : item;
+    data.forEach((item) => {
+      const transformedItem = transformFunction
+        ? transformFunction(item)
+        : item;
 
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const row: Record<string, any> = {};
       for (const key of columnsToExport) {
         if (key in transformedItem) {
@@ -218,9 +232,9 @@ export async function exportToExcel<T extends ExportableData>(
     // Style the header row
     worksheet.getRow(1).font = { bold: true };
     worksheet.getRow(1).fill = {
-      type: 'pattern',
-      pattern: 'solid',
-      fgColor: { argb: 'FFE0E0E0' }
+      type: "pattern",
+      pattern: "solid",
+      fgColor: { argb: "FFE0E0E0" },
     };
 
     // Generate Excel file buffer
@@ -228,7 +242,7 @@ export async function exportToExcel<T extends ExportableData>(
 
     // Create blob and download
     const blob = new Blob([buffer], {
-      type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+      type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
     });
 
     downloadFile(blob, `${filename}.xlsx`);
@@ -257,7 +271,7 @@ export async function exportData<T extends ExportableData>(
 ): Promise<boolean> {
   // Use a consistent toast ID to ensure only one toast is shown at a time
   const TOAST_ID = "export-data-toast";
-  
+
   try {
     // Start loading
     if (onLoadingStart) onLoadingStart();
@@ -265,7 +279,7 @@ export async function exportData<T extends ExportableData>(
     // Show toast for long operations using consistent ID
     toast.loading("Preparing export...", {
       description: "Fetching data for export...",
-      id: TOAST_ID
+      id: TOAST_ID,
     });
 
     // Get the data
@@ -274,13 +288,13 @@ export async function exportData<T extends ExportableData>(
     // Update the same toast for processing
     toast.loading("Processing data...", {
       description: "Generating export file...",
-      id: TOAST_ID
+      id: TOAST_ID,
     });
 
     if (exportData.length === 0) {
       toast.error("Export failed", {
         description: "No data available to export.",
-        id: TOAST_ID
+        id: TOAST_ID,
       });
       return false;
     }
@@ -305,7 +319,7 @@ export async function exportData<T extends ExportableData>(
       if (success) {
         toast.success("Export successful", {
           description: `Exported ${exportData.length} ${entityName} to CSV.`,
-          id: TOAST_ID
+          id: TOAST_ID,
         });
       }
     } else {
@@ -320,7 +334,7 @@ export async function exportData<T extends ExportableData>(
       if (success) {
         toast.success("Export successful", {
           description: `Exported ${exportData.length} ${entityName} to Excel.`,
-          id: TOAST_ID
+          id: TOAST_ID,
         });
       }
     }
@@ -328,10 +342,10 @@ export async function exportData<T extends ExportableData>(
     return success;
   } catch (error) {
     console.error("Error exporting data:", error);
-    
+
     toast.error("Export failed", {
       description: "There was a problem exporting the data. Please try again.",
-      id: TOAST_ID
+      id: TOAST_ID,
     });
     return false;
   } finally {

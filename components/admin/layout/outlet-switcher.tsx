@@ -21,7 +21,6 @@ import {
 import Image from "next/image";
 import { useSession } from "next-auth/react";
 import axios from "@/lib/axios";
-import { useQuery } from "@tanstack/react-query";
 import { useActiveOutlet } from "@/store/useOutletStore";
 import { useRouter } from "next/navigation";
 
@@ -44,7 +43,6 @@ export function OutletSwitcher() {
   };
 
   const [outlets, setOutlets] = React.useState<Outlet[]>([]);
-  const [isLoading, setIsLoading] = React.useState(true);
 
   // Fetch outlets data - only once on initial load
   React.useEffect(() => {
@@ -52,7 +50,6 @@ export function OutletSwitcher() {
       if (!session?.accessToken) return;
 
       try {
-        setIsLoading(true);
         const response = await axios.get(apiUrl, {
           headers: {
             Accept: "application/json",
@@ -73,12 +70,11 @@ export function OutletSwitcher() {
         }
       } catch (error) {
         console.error("Error fetching outlets:", error);
-      } finally {
-        setIsLoading(false);
       }
     };
 
     fetchOutlets();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [session?.accessToken]); // Removed outlet_id_active and setActiveOutlet from deps to prevent re-fetching
 
   // Find the currently active outlet
@@ -90,7 +86,7 @@ export function OutletSwitcher() {
   }, [outlets, outlet_id_active]);
 
   // Handle outlet change
-  const handleOutletChange = (outlet: any) => {
+  const handleOutletChange = (outlet: Outlet) => {
     setActiveOutlet(outlet.id.toString());
     router.push("/dashboard");
   };
@@ -98,7 +94,7 @@ export function OutletSwitcher() {
   return (
     <SidebarMenu>
       <SidebarMenuItem>
-        {session?.data?.user?.role === "owner" ? (
+        {session?.user?.role === "owner" ? (
           <>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
@@ -135,7 +131,7 @@ export function OutletSwitcher() {
                 <DropdownMenuLabel className="text-muted-foreground text-xs">
                   Outlet
                 </DropdownMenuLabel>
-                {outlets.map((outlet: any) => (
+                {outlets.map((outlet: Outlet) => (
                   <DropdownMenuItem
                     key={outlet.id}
                     onClick={() => handleOutletChange(outlet)}

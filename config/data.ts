@@ -1,4 +1,11 @@
-export const mituniData: any[] = [
+interface MituniItem {
+  iD: number;
+  name: string;
+  status: string;
+  value: number;
+}
+
+export const mituniData: MituniItem[] = [
   {
     iD: 1,
     name: "Item 1",

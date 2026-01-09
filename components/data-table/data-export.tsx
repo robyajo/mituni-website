@@ -42,6 +42,7 @@ interface DataTableExportProps<TData extends ExportableData> {
   exportType?: "csv" | "excel";
   buttonText?: string;
   // Subrow props
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   subRowsConfig?: any;
   getSelectedParentRows?: () => Promise<TData[]>;
   getSelectedSubRows?: () => Promise<TData[]>;
@@ -69,6 +70,7 @@ export function DataTableExport<TData extends ExportableData>({
   columnWidths,
   headers,
   transformFunction,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   size = "default",
   config,
   exportType,

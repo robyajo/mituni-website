@@ -1,10 +1,8 @@
 "use client";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { useMemo, useState, useCallback } from "react";
-import { EllipsisIcon, Settings2, FunnelX } from "lucide-react";
+import { useState, useCallback } from "react";
+import { EllipsisIcon, Settings2 } from "lucide-react";
 import {
-  type ColumnDef,
   createColumnHelper,
   getCoreRowModel,
   getPaginationRowModel,
@@ -12,11 +10,11 @@ import {
   type PaginationState,
   type SortingState,
   useReactTable,
+  type Row,
 } from "@tanstack/react-table";
 import { DataGrid, DataGridContainer } from "@/components/ui/data-grid";
 import { DataGridColumnVisibility } from "@/components/ui/data-grid-column-visibility";
 import { DataGridColumnHeader } from "@/components/ui/data-grid-column-header";
-import { DataGridTable } from "@/components/ui/data-grid-table";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { DataGridPagination } from "@/components/ui/data-grid-pagination";
 import {
@@ -38,8 +36,16 @@ import { mituniData } from "@/config/data";
 import { DragEndEvent } from "@dnd-kit/core";
 import { arrayMove } from "@dnd-kit/sortable";
 
+export interface MituniData {
+  iD: number;
+  name: string;
+  status: "Active" | "Inactive" | "Pending";
+  value: number;
+}
+
 // Row actions component
-function RowActions({ row: _row }: { row: any }) {
+function RowActions({ row: _row }: { row: Row<MituniData> }) {
+  // eslint-disable-line @typescript-eslint/no-unused-vars
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -81,12 +87,7 @@ function RowActions({ row: _row }: { row: any }) {
     </DropdownMenu>
   );
 }
-export interface MituniData {
-  iD: number;
-  name: string;
-  status: "Active" | "Inactive" | "Pending";
-  value: number;
-}
+
 export default function MituniTable() {
   const [pagination, setPagination] = useState<PaginationState>({
     pageIndex: 0,
@@ -194,7 +195,7 @@ export default function MituniTable() {
   ];
   const table = useReactTable({
     columns,
-    data: mituniData,
+    data: mituniData as MituniData[],
     pageCount: Math.ceil((mituniData?.length || 0) / pagination.pageSize),
     state: {
       pagination,

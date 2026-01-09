@@ -43,6 +43,7 @@ export function DataTablePagination<TData>({
   size = "default",
 }: DataTablePaginationProps<TData>) {
   // Convert 'lg' size to 'default' for SelectTrigger since it only accepts 'sm' | 'default'
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const selectSize = size === "lg" ? "default" : size;
 
   return (
